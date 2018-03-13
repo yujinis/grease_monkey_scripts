@@ -9,6 +9,8 @@
 // @grant        GM_setClipboard
 // ==/UserScript==
 
+var hassecond = true;
+
 function t(time,zone){
     var weekday = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
 
@@ -32,7 +34,11 @@ function t(time,zone){
     }
     */
 
-    return YYYY+"/"+MM+"/"+DD+" "+day+" "+hh+":"+mm+":"+ss+" "+zone;
+	if(hassecond){
+	    return YYYY+"/"+MM+"/"+DD+" "+day+" "+hh+":"+mm+":"+ss+" "+zone;
+	}else{
+	    return YYYY+"/"+MM+"/"+DD+" "+day+" "+hh+":"+mm+" "+zone;
+	}
 }
 
 (function() {
@@ -74,9 +80,9 @@ function t(time,zone){
         }
 
         /*Tuesday 6 Feburary, 2018 23:07:22 JST*/
-        var isenmonth = false;
+        var ismonthen = false;
         if(/January|February|March|April|May|June|July|August|September|October|November|December/.test(selected)){ /* Correct Feburary!!! */
-            isenmonth = true;
+            ismonthen = true;
         }
 
         var local = new Date(Date.now());
@@ -87,7 +93,7 @@ function t(time,zone){
                 if( date === null ){
                     date = selected.match(/([0-9]{1,2})[ ]*\u6708[ ]*([0-9]{1,2})[ ]*\u65E5/i);
                 }
-            }else if(isenmonth){
+            }else if(ismonthen){
                 date = selected.match(/([0-9]{1,2}) [ ]*(January|February|March|April|May|June|July|August|September|October|November|December)[, ]*([0-9]{4})/); /* Correct Feburary!!! */
                 if( date === null ){
                     date = selected.match(/([0-9]{1,2}) [ ]*(January|February|March|April|May|June|July|August|September|October|November|December)/); /* Correct Feburary!!! */
@@ -104,18 +110,20 @@ function t(time,zone){
                 time = selected.match(/([0-9]{1,2}):([0-9]{1,2}):([0-9]{1,2})/i);
                 if( time === null){
                     time = selected.match(/([0-9]{1,2}):([0-9]{1,2})/i);
+					hassecond = false;
                 }
             }else{
                 time = selected.match(/([0-9]{1,2})[ ]*\u6642[ ]*([0-9]{1,2})[ ]*\u5206[ ]*([0-9]{1,2})[ ]*\u79D2/i);
                 if( time === null){
                     time = selected.match(/([0-9]{1,2})[ ]*\u6642[ ]*([0-9]{1,2})[ ]*\u5206/i);
+					hassecond = false;
                 }
             }
 
             var hour, min, year, month, day, sec;
             var date_set = true;
             if(date !== null){
-                if(isenmonth){
+                if(ismonthen){
                     var months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
                     if( !isNaN(date[3]) ){
                         year  = Number(date[3]);
