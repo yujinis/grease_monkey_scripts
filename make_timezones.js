@@ -34,11 +34,11 @@ function t(time,zone){
     }
     */
 
-	if(hassecond){
-	    return YYYY+"/"+MM+"/"+DD+" "+day+" "+hh+":"+mm+":"+ss+" "+zone;
-	}else{
-	    return YYYY+"/"+MM+"/"+DD+" "+day+" "+hh+":"+mm+" "+zone;
-	}
+    if(hassecond){
+        return YYYY+"/"+MM+"/"+DD+" "+day+" "+hh+":"+mm+":"+ss+" "+zone;
+    }else{
+        return YYYY+"/"+MM+"/"+DD+" "+day+" "+hh+":"+mm+" "+zone;
+    }
 }
 
 (function() {
@@ -68,12 +68,12 @@ function t(time,zone){
             zone = "UTC";
         }
 
-        /*2月6日23時07分*/
         var isdatejp = false;
         if(/[\u5E74\u6708\u65E5]/.test(selected)){ /* 年月日 */
             isdatejp = true;
         }
 
+        /*2月6日23時07分*/
         var istimejp = false;
         if(/[\u6642\u5206\u79D2]/.test(selected)){ /* 時分秒 */
             istimejp = true;
@@ -106,19 +106,20 @@ function t(time,zone){
             }
 
             var time;
-            if(!istimejp){
-                time = selected.match(/([0-9]{1,2}):([0-9]{1,2}):([0-9]{1,2})/i);
-                if( time === null){
-                    time = selected.match(/([0-9]{1,2}):([0-9]{1,2})/i);
-					hassecond = false;
-                }
-            }else{
+            if(istimejp){
                 time = selected.match(/([0-9]{1,2})[ ]*\u6642[ ]*([0-9]{1,2})[ ]*\u5206[ ]*([0-9]{1,2})[ ]*\u79D2/i);
                 if( time === null){
                     time = selected.match(/([0-9]{1,2})[ ]*\u6642[ ]*([0-9]{1,2})[ ]*\u5206/i);
-					hassecond = false;
+                    hassecond = false;
                 }
-            }
+           }else{
+			    /* ： \uFF1A */
+                time = selected.match(/([0-9]{1,2})[:\uFF1A]([0-9]{1,2})[:\uFF1A]([0-9]{1,2})/i);
+                if( time === null){
+                    time = selected.match(/([0-9]{1,2}):([0-9]{1,2})/i);
+                    hassecond = false;
+                }
+           }
 
             var hour, min, year, month, day, sec;
             var date_set = true;
